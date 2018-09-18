@@ -1963,7 +1963,7 @@ define([
 
                 deferred.resolve(responseHeaders);
                 return;
-            } else if (defined(headers) && /image\/[a-z]+$/i.test(headers.Accept)) {
+            } else if (defined(headers) && defined(headers.Accept) && /image\/[a-z]+$/i.test(headers.Accept)) {
                 responseHeaderString = xhr.getAllResponseHeaders().toLowerCase();
                 var contentType = responseHeaderString.match(/content-type: ([a-z0-9\/]+)/i)[1];
                 if (contentType !== headers.Accept.toLowerCase()) {
