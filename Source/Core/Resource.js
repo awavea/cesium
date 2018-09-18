@@ -1948,9 +1948,10 @@ define([
 
             var response = typeof xhr.response !== 'undefined' ? xhr.response : xhr.responseText;
             var browserResponseType = xhr.responseType;
+            var responseHeaderString;
 
             if (method === 'HEAD' || method === 'OPTIONS') {
-                var responseHeaderString = xhr.getAllResponseHeaders();
+                responseHeaderString = xhr.getAllResponseHeaders();
                 var splitHeaders = responseHeaderString.trim().split(/[\r\n]+/);
 
                 var responseHeaders = {};
@@ -1962,6 +1963,14 @@ define([
 
                 deferred.resolve(responseHeaders);
                 return;
+            } else if (defined(headers) && /image\/[a-z]+$/i.test(headers.Accept)) {
+                responseHeaderString = xhr.getAllResponseHeaders().toLowerCase();
+                var contentType = responseHeaderString.match(/content-type: ([a-z0-9\/]+)/i)[1];
+                if (contentType !== headers.Accept.toLowerCase()) {
+                    deferred.reject(new RuntimeError('Response from server is not the required image type.\n' +
+                    'Expected: ' + headers.Accept + '\n' +
+                    'Received: ' + contentType));
+                }
             }
 
             //All modern browsers will go into either the first or second if block or last else block.
