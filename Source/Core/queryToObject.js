@@ -45,7 +45,9 @@ define([
             var subparts = parts[i].split('=');
 
             var name = decodeURIComponent(subparts[0]);
-            var value = subparts[1];
+            // get rest of parts[i] as could contain = 
+            var value = parts[i].substring(parts[i].indexOf('=')+1)
+
             if (defined(value)) {
                 value = decodeURIComponent(value);
             } else {
